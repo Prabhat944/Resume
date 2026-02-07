@@ -14,7 +14,10 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
 # Activate virtual environment if it exists
-if [ -d "venv" ]; then
+if [ -d ".venv" ]; then
+    echo -e "${BLUE}Activating virtual environment...${NC}"
+    source .venv/bin/activate
+elif [ -d "venv" ]; then
     echo -e "${BLUE}Activating virtual environment...${NC}"
     source venv/bin/activate
 else
@@ -97,15 +100,16 @@ for py_file in $PY_FILES; do
         # This is a simple approach - you may need to adjust based on your script structure
         filename=$(basename "$py_file" .py)
         # Try common output filename patterns
-        # if [ -f "${filename}.docx" ]; then
-        #     GENERATED_DOCX+=("${filename}.docx")
-        # el
-        if [ -f "Prabhat_Kumar_Resume_TwoColumn.docx" ] && [[ "$py_file" == *"twocolumn"* ]]; then
+        if [ -f "Prabhat_Kumar_Resume_TwoColumn.docx" ] && [[ "$py_file" == *"twocolumn"* ]] && [[ "$py_file" != *"twocolumn2"* ]] && [[ "$py_file" != *"twocolumn3"* ]]; then
             GENERATED_DOCX+=("Prabhat_Kumar_Resume_TwoColumn.docx")
         elif [ -f "Prabhat_Kumar_Resume_AppDeveloper.docx" ] && [[ "$py_file" == *"app_developer"* ]]; then
             GENERATED_DOCX+=("Prabhat_Kumar_Resume_AppDeveloper.docx")
-        # elif [ -f "Prabhat_Kumar_Resume.docx" ]; then
-        #     GENERATED_DOCX+=("Prabhat_Kumar_Resume.docx")
+        elif [ -f "Prabhat_Kumar_Resume_WebDeveloper.docx" ] && [[ "$py_file" == *"twocolumn3"* ]]; then
+            GENERATED_DOCX+=("Prabhat_Kumar_Resume_WebDeveloper.docx")
+        elif [ -f "Rajnish-Kumar.docx" ] && [[ "$py_file" == *"rajnish"* ]]; then
+            GENERATED_DOCX+=("Rajnish-Kumar.docx")
+        elif [ -f "Prabhat-Kumar-React.docx" ] && [[ "$py_file" == *"react_template"* ]]; then
+            GENERATED_DOCX+=("Prabhat-Kumar-React.docx")
         fi
     else
         FAIL_COUNT=$((FAIL_COUNT + 1))
@@ -124,7 +128,7 @@ done
 
 # Also try to find and convert any DOCX files that might have been generated
 echo -e "${BLUE}--- Checking for additional DOCX files ---${NC}"
-ADDITIONAL_DOCX=$(find . -maxdepth 1 -name "Prabhat_Kumar_Resume*.docx" -type f | sort)
+ADDITIONAL_DOCX=$(find . -maxdepth 1 \( -name "Prabhat_Kumar_Resume*.docx" -o -name "Rajnish*.docx" -o -name "Prabhat-Kumar-React.docx" \) -type f | sort)
 for docx_file in $ADDITIONAL_DOCX; do
     filename=$(basename "$docx_file")
     if [[ ! " ${GENERATED_DOCX[@]} " =~ " ${filename} " ]]; then
@@ -147,10 +151,10 @@ echo ""
 # List generated files
 echo -e "${BLUE}Generated files:${NC}"
 echo -e "${GREEN}DOCX files:${NC}"
-ls -lh Prabhat_Kumar_Resume*.docx 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}' || echo "  None"
+(ls -lh Prabhat_Kumar_Resume*.docx 2>/dev/null; ls -lh Rajnish*.docx 2>/dev/null; ls -lh Prabhat-Kumar-React.docx 2>/dev/null) | awk '{print "  " $9 " (" $5 ")"}' || echo "  None"
 echo ""
 echo -e "${GREEN}PDF files:${NC}"
-ls -lh Prabhat_Kumar_Resume*.pdf 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}' || echo "  None"
+(ls -lh Prabhat_Kumar_Resume*.pdf 2>/dev/null; ls -lh Rajnish*.pdf 2>/dev/null; ls -lh Prabhat-Kumar-React.pdf 2>/dev/null) | awk '{print "  " $9 " (" $5 ")"}' || echo "  None"
 echo ""
 
 echo -e "${GREEN}All done!${NC}"

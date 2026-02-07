@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to convert DOCX resume to PDF
+Script to convert DOCX resume to PDF.
+To convert Rajnish-Kumar.docx to Rajnish-Kumar.pdf, set docx_file and pdf_file below to those filenames.
 """
 
 import sys
